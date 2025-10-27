@@ -46,45 +46,81 @@
                         <HBox alignment="CENTER" spacing="15">
                             <children>
                                 <Button text="➕ Add User" onAction="#handleAddUser"
-                                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40;" />
+                                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40; -fx-background-radius: 8;" />
                                 <Button text="✏️ Edit User" onAction="#handleEditUser"
-                                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40;" />
+                                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40; -fx-background-radius: 8;" />
                                 <Button text="🗑️ Delete User" onAction="#handleDeleteUser"
-                                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40;" />
+                                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120; -fx-pref-height: 40; -fx-background-radius: 8;" />
                                 <Button text="🔄 Refresh" onAction="#handleRefresh"
-                                        style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 40;" />
+                                        style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 40; -fx-background-radius: 8;" />
                             </children>
                         </HBox>
 
                         <!-- Search and Filter Section -->
-                        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 15; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
+                        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20; -fx-background-color: #f8f9fa; -fx-background-radius: 10; -fx-pref-width: 900;">
                             <children>
                                 <VBox spacing="5">
                                     <Label text="Search Users" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
                                     <TextField fx:id="searchField" promptText="Search by name or email..."
-                                               style="-fx-pref-width: 300; -fx-pref-height: 35;" />
+                                               style="-fx-pref-width: 300; -fx-pref-height: 35; -fx-background-radius: 6; -fx-border-radius: 6;" />
                                 </VBox>
 
                                 <VBox spacing="5">
                                     <Label text="Filter by Role" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-                                    <ComboBox fx:id="roleFilter" style="-fx-pref-width: 150; -fx-pref-height: 35;" />
+                                    <ComboBox fx:id="roleFilter" style="-fx-pref-width: 150; -fx-pref-height: 35; -fx-background-radius: 6;" />
                                 </VBox>
 
                                 <Region HBox.hgrow="ALWAYS" />
 
-                                <Label text="👥 8 Users Total" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 14;" />
+                                <VBox alignment="CENTER_RIGHT" spacing="5">
+                                    <Label fx:id="totalUsersLabel" text="0 Users" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 16;" />
+                                    <Label text="Total Registered" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- User Statistics -->
+                        <HBox alignment="CENTER" spacing="20" style="-fx-pref-width: 900;">
+                            <children>
+                                <VBox alignment="CENTER" spacing="8" style="-fx-background-color: #e8f5e8; -fx-background-radius: 10; -fx-padding: 20; -fx-pref-width: 180;">
+                                    <Label text="👑" style="-fx-font-size: 28;" />
+                                    <Label fx:id="adminCountLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #27ae60;" />
+                                    <Label text="Administrators" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;" />
+                                </VBox>
+
+                                <VBox alignment="CENTER" spacing="8" style="-fx-background-color: #e8f4fd; -fx-background-radius: 10; -fx-padding: 20; -fx-pref-width: 180;">
+                                    <Label text="🚌" style="-fx-font-size: 28;" />
+                                    <Label fx:id="driverCountLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #3498db;" />
+                                    <Label text="Drivers" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;" />
+                                </VBox>
+
+                                <VBox alignment="CENTER" spacing="8" style="-fx-background-color: #fef5e7; -fx-background-radius: 10; -fx-padding: 20; -fx-pref-width: 180;">
+                                    <Label text="👤" style="-fx-font-size: 28;" />
+                                    <Label fx:id="clientCountLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #f39c12;" />
+                                    <Label text="Clients" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;" />
+                                </VBox>
+
+                                <VBox alignment="CENTER" spacing="8" style="-fx-background-color: #f4ecf7; -fx-background-radius: 10; -fx-padding: 20; -fx-pref-width: 180;">
+                                    <Label text="📊" style="-fx-font-size: 28;" />
+                                    <Label text="Live Data" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #9b59b6;" />
+                                    <Label text="Auto Refresh" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                </VBox>
                             </children>
                         </HBox>
 
                         <!-- Users Table -->
-                        <VBox spacing="10" style="-fx-pref-width: 900;">
+                        <VBox spacing="15" style="-fx-pref-width: 900;">
                             <children>
-                                <Label text="All Users" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-                                <TableView fx:id="usersTable" style="-fx-pref-height: 400;">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="👥 All Users" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label text="Real-time data from database" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-style: italic;" />
+                                </HBox>
+                                <TableView fx:id="usersTable" style="-fx-pref-height: 350;">
                                     <columns>
                                         <TableColumn fx:id="nameColumn" text="Name" prefWidth="180" />
                                         <TableColumn fx:id="emailColumn" text="Email" prefWidth="220" />
-                                        <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="150" />
+                                        <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="130" />
                                         <TableColumn fx:id="roleColumn" text="Role" prefWidth="100" />
                                         <TableColumn fx:id="dateColumn" text="Joined Date" prefWidth="120" />
                                     </columns>
@@ -92,36 +128,40 @@
                             </children>
                         </VBox>
 
-                        <!-- User Statistics -->
-                        <HBox alignment="CENTER" spacing="30" style="-fx-padding: 20;">
+                        <!-- Quick Tips -->
+                        <HBox alignment="CENTER" spacing="30" style="-fx-pref-width: 900;">
                             <children>
-                                <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #e8f5e8; -fx-background-radius: 10; -fx-padding: 15; -fx-pref-width: 150;">
-                                    <Label text="👑" style="-fx-font-size: 24;" />
-                                    <Label text="2" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #27ae60;" />
-                                    <Label text="Admins" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                                <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #fff3cd; -fx-background-radius: 10; -fx-pref-width: 430;">
+                                    <children>
+                                        <Label text="💡 Management Tips" style="-fx-font-weight: bold; -fx-text-fill: #856404;" />
+                                        <Label text="• Select a user to edit or delete their account" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
+                                        <Label text="• Use search and filters to find specific users" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
+                                        <Label text="• Only administrators can manage user accounts" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
+                                    </children>
                                 </VBox>
 
-                                <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #e8f4fd; -fx-background-radius: 10; -fx-padding: 15; -fx-pref-width: 150;">
-                                    <Label text="🚌" style="-fx-font-size: 24;" />
-                                    <Label text="3" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #3498db;" />
-                                    <Label text="Drivers" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
-                                </VBox>
-
-                                <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #fef5e7; -fx-background-radius: 10; -fx-padding: 15; -fx-pref-width: 150;">
-                                    <Label text="👤" style="-fx-font-size: 24;" />
-                                    <Label text="3" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #f39c12;" />
-                                    <Label text="Clients" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                                <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #d1ecf1; -fx-background-radius: 10; -fx-pref-width: 430;">
+                                    <children>
+                                        <Label text="⚡ Quick Actions" style="-fx-font-weight: bold; -fx-text-fill: #0c5460;" />
+                                        <Label text="• Click 'Refresh' to sync with latest data" style="-fx-text-fill: #0c5460; -fx-font-size: 12;" />
+                                        <Label text="• New users appear automatically after registration" style="-fx-text-fill: #0c5460; -fx-font-size: 12;" />
+                                        <Label text="• All changes are saved to the database" style="-fx-text-fill: #0c5460; -fx-font-size: 12;" />
+                                    </children>
                                 </VBox>
                             </children>
                         </HBox>
 
-                        <!-- Quick Tips -->
-                        <VBox spacing="10" style="-fx-pref-width: 900; -fx-padding: 20; -fx-background-color: #fff3cd; -fx-background-radius: 10;">
+                        <!-- System Status -->
+                        <VBox spacing="10" style="-fx-pref-width: 900; -fx-padding: 15; -fx-background-color: #e2e3e5; -fx-background-radius: 10;">
                             <children>
-                                <Label text="💡 Quick Tips" style="-fx-font-weight: bold; -fx-text-fill: #856404;" />
-                                <Label text="• Select a user to edit or delete their account" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
-                                <Label text="• Use search and filters to find specific users" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
-                                <Label text="• Only administrators can manage user accounts" style="-fx-text-fill: #856404; -fx-font-size: 12;" />
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="🟢 System Status: Connected to Database" style="-fx-font-weight: bold; -fx-text-fill: #383d41;" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label text="Last Updated: Just now" style="-fx-text-fill: #383d41; -fx-font-size: 11;" />
+                                    </children>
+                                </HBox>
+                                <ProgressIndicator progress="-1.0" prefWidth="20" prefHeight="20" />
                             </children>
                         </VBox>
 
@@ -130,18 +170,22 @@
                     </children>
                 </VBox>
             </content>
+
+            <padding>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </padding>
         </ScrollPane>
     </center>
 
     <bottom>
         <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 15;">
             <children>
-                <Label text="© 2024 Bus Schedule System - User Management" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                <Label text="© 2024 Bus Schedule System - User Management Portal" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button text="Back to Dashboard" onAction="#handleBackToDashboard"
-                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 35;" />
-                <Button text="Logout" onAction="#handleLogout"
-                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 35;" />
+                <Button text="📊 Back to Dashboard" onAction="#handleBackToDashboard"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 160; -fx-pref-height: 35; -fx-background-radius: 6;" />
+                <Button text="🚪 Logout" onAction="#handleLogout"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 35; -fx-background-radius: 6; -fx-margin: 0 0 0 10;" />
             </children>
         </HBox>
     </bottom>

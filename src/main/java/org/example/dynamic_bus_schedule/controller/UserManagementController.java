@@ -1,6 +1,7 @@
 package org.example.dynamic_bus_schedule.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.collections.ObservableList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import javafx.scene.layout.GridPane;
 import org.example.dynamic_bus_schedule.Main;
 import org.example.dynamic_bus_schedule.service.AuthService;
 
@@ -19,6 +21,10 @@ public class UserManagementController {
     @FXML private BorderPane mainContainer;
     @FXML private Label welcomeLabel;
     @FXML private Label userRoleLabel;
+    @FXML private Label totalUsersLabel;
+    @FXML private Label adminCountLabel;
+    @FXML private Label driverCountLabel;
+    @FXML private Label clientCountLabel;
     @FXML private TableView<User> usersTable;
     @FXML private TableColumn<User, String> nameColumn;
     @FXML private TableColumn<User, String> emailColumn;
@@ -35,6 +41,7 @@ public class UserManagementController {
     private AuthService authService;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+    private ObservableList<User> allUsers = FXCollections.observableArrayList();
 
     // User data class
     public static class User {
@@ -134,25 +141,44 @@ public class UserManagementController {
     private void loadUsersData() {
         new Thread(() -> {
             try {
-                // For now, use mock data. You can replace this with API calls later
-                ObservableList<User> users = FXCollections.observableArrayList(
-                        new User(1, "System Admin", "admin@bus.com", "+1234567890", "Admin", "Jan 01, 2024"),
-                        new User(2, "John Driver", "driver.john@bus.com", "+8801712345678", "Driver", "Jan 15, 2024"),
-                        new User(3, "Sarah Client", "sarah.client@bus.com", "+8801812345678", "Client", "Jan 16, 2024"),
-                        new User(4, "Mike Operator", "mike.driver@bus.com", "+8801912345678", "Driver", "Jan 17, 2024"),
-                        new User(5, "Emma Traveler", "emma.client@bus.com", "+8801612345678", "Client", "Jan 18, 2024"),
-                        new User(6, "David Manager", "david.admin@bus.com", "+8801512345678", "Admin", "Jan 19, 2024"),
-                        new User(7, "Lisa Passenger", "lisa.client@bus.com", "+8801412345678", "Client", "Jan 20, 2024"),
-                        new User(8, "Robert Chauffeur", "robert.driver@bus.com", "+8801312345678", "Driver", "Jan 21, 2024")
-                );
+                System.out.println("Loading users data from API...");
 
-                // Update UI on JavaFX Application Thread
-                javafx.application.Platform.runLater(() -> {
-                    if (usersTable != null) {
-                        usersTable.setItems(users);
-                        updateUserStats(users.size());
+                // Make API call to get all users
+                String response = authService.makeApiCall("GET", "/users");
+                JsonNode jsonResponse = objectMapper.readTree(response);
+
+                if (jsonResponse.get("success").asBoolean()) {
+                    JsonNode usersData = jsonResponse.get("data");
+                    ObservableList<User> users = FXCollections.observableArrayList();
+
+                    for (JsonNode userNode : usersData) {
+                        try {
+                            int id = userNode.get("id").asInt();
+                            String name = userNode.get("name").asText();
+                            String email = userNode.get("email").asText();
+                            String phone = userNode.has("phone") ? userNode.get("phone").asText() : "N/A";
+                            String role = userNode.get("role").asText();
+                            String createdAt = formatDate(userNode.get("created_at").asText());
+
+                            users.add(new User(id, name, email, phone, role, createdAt));
+                        } catch (Exception e) {
+                            System.err.println("Error parsing user data: " + e.getMessage());
+                        }
                     }
-                });
+
+                    // Update UI on JavaFX Application Thread
+                    javafx.application.Platform.runLater(() -> {
+                        allUsers = users;
+                        usersTable.setItems(allUsers);
+                        updateUserStats();
+                        applyFilters(); // Apply any active filters
+                    });
+
+                    System.out.println("Successfully loaded " + users.size() + " users from API");
+
+                } else {
+                    throw new Exception("API returned error: " + jsonResponse.get("message").asText());
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -165,6 +191,22 @@ public class UserManagementController {
         }).start();
     }
 
+    private String formatDate(String dateString) {
+        try {
+            if (dateString.contains("T")) {
+                // ISO format: 2024-01-15T10:30:00.000Z
+                SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                Date date = isoFormat.parse(dateString);
+                return dateFormat.format(date);
+            } else {
+                // Simple format
+                return dateString;
+            }
+        } catch (Exception e) {
+            return dateString;
+        }
+    }
+
     private void loadMockUsersData() {
         ObservableList<User> users = FXCollections.observableArrayList(
                 new User(1, "System Admin", "admin@bus.com", "+1234567890", "Admin", "Jan 01, 2024"),
@@ -174,32 +216,160 @@ public class UserManagementController {
                 new User(5, "Emma Traveler", "emma.client@bus.com", "+8801612345678", "Client", "Jan 18, 2024")
         );
 
-        if (usersTable != null) {
-            usersTable.setItems(users);
-            updateUserStats(users.size());
-        }
+        allUsers = users;
+        usersTable.setItems(allUsers);
+        updateUserStats();
     }
 
     private void applyFilters() {
-        // This would filter the table based on search and role filters
-        // For now, we'll just log the filter values
-        String searchText = searchField.getText();
+        String searchText = searchField.getText().toLowerCase();
         String roleFilterValue = roleFilter.getValue();
 
-        System.out.println("Applying filters - Search: " + searchText + ", Role: " + roleFilterValue);
+        ObservableList<User> filteredUsers = FXCollections.observableArrayList();
 
-        // In a real implementation, you would filter the table data here
+        for (User user : allUsers) {
+            boolean matchesSearch = searchText.isEmpty() ||
+                    user.getName().toLowerCase().contains(searchText) ||
+                    user.getEmail().toLowerCase().contains(searchText);
+
+            boolean matchesRole = roleFilterValue.equals("All") ||
+                    user.getRole().equalsIgnoreCase(roleFilterValue);
+
+            if (matchesSearch && matchesRole) {
+                filteredUsers.add(user);
+            }
+        }
+
+        usersTable.setItems(filteredUsers);
+        updateUserStats();
     }
 
-    private void updateUserStats(int totalUsers) {
-        // You can update statistics labels here if you add them to the UI
-        System.out.println("Total users: " + totalUsers);
+    private void updateUserStats() {
+        int totalUsers = usersTable.getItems().size();
+        int adminCount = 0;
+        int driverCount = 0;
+        int clientCount = 0;
+
+        for (User user : usersTable.getItems()) {
+            switch (user.getRole().toLowerCase()) {
+                case "admin":
+                    adminCount++;
+                    break;
+                case "driver":
+                    driverCount++;
+                    break;
+                case "client":
+                    clientCount++;
+                    break;
+            }
+        }
+
+        // Update labels if they exist
+        if (totalUsersLabel != null) {
+            totalUsersLabel.setText(totalUsers + " Users");
+        }
+        if (adminCountLabel != null) {
+            adminCountLabel.setText(adminCount + "");
+        }
+        if (driverCountLabel != null) {
+            driverCountLabel.setText(driverCount + "");
+        }
+        if (clientCountLabel != null) {
+            clientCountLabel.setText(clientCount + "");
+        }
     }
 
     @FXML
     private void handleAddUser() {
         System.out.println("Add user clicked");
-        showInfoAlert("Add User", "Add new user functionality coming soon!\n\nThis will allow you to:\n• Create new user accounts\n• Assign roles and permissions\n• Set up user profiles");
+
+        // Create a dialog for adding new user
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Add New User");
+        dialog.setHeaderText("Create a new user account");
+
+        // Set the button types
+        ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+
+        // Create the form
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Full Name");
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email Address");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Phone Number");
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll("Admin", "Driver", "Client");
+        roleComboBox.setValue("Client");
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Email:"), 0, 1);
+        grid.add(emailField, 1, 1);
+        grid.add(new Label("Password:"), 0, 2);
+        grid.add(passwordField, 1, 2);
+        grid.add(new Label("Phone:"), 0, 3);
+        grid.add(phoneField, 1, 3);
+        grid.add(new Label("Role:"), 0, 4);
+        grid.add(roleComboBox, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convert the result to a user when the create button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == createButtonType) {
+                if (nameField.getText().isEmpty() || emailField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+                    showErrorAlert("Please fill in all required fields");
+                    return null;
+                }
+                return new User(0, nameField.getText(), emailField.getText(),
+                        phoneField.getText(), roleComboBox.getValue(), "Just now");
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(newUser -> {
+            // Here you would make an API call to create the user
+            createNewUser(newUser);
+        });
+    }
+
+    private void createNewUser(User newUser) {
+        new Thread(() -> {
+            try {
+                String requestBody = String.format(
+                        "{\"name\":\"%s\",\"email\":\"%s\",\"password\":\"%s\",\"phone\":\"%s\",\"role\":\"%s\"}",
+                        newUser.getName(), newUser.getEmail(), "password123", // In real app, use actual password
+                        newUser.getPhone(), newUser.getRole().toLowerCase()
+                );
+
+                String response = authService.makeApiCall("POST", "/auth/register", requestBody);
+                JsonNode jsonResponse = objectMapper.readTree(response);
+
+                if (jsonResponse.get("success").asBoolean()) {
+                    javafx.application.Platform.runLater(() -> {
+                        showInfoAlert("Success", "User created successfully!");
+                        loadUsersData(); // Refresh the user list
+                    });
+                } else {
+                    throw new Exception("API error: " + jsonResponse.get("message").asText());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    showErrorAlert("Failed to create user: " + e.getMessage());
+                });
+            }
+        }).start();
     }
 
     @FXML
@@ -207,13 +377,83 @@ public class UserManagementController {
         User selectedUser = usersTable.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             System.out.println("Edit user: " + selectedUser.getName());
-            showInfoAlert("Edit User", "Editing user: " + selectedUser.getName() +
-                    "\n\nEmail: " + selectedUser.getEmail() +
-                    "\nRole: " + selectedUser.getRole() +
-                    "\n\nEdit functionality coming soon!");
+
+            // Create edit dialog
+            Dialog<User> dialog = new Dialog<>();
+            dialog.setTitle("Edit User");
+            dialog.setHeaderText("Edit user: " + selectedUser.getName());
+
+            ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+
+            TextField nameField = new TextField(selectedUser.getName());
+            TextField emailField = new TextField(selectedUser.getEmail());
+            TextField phoneField = new TextField(selectedUser.getPhone());
+            ComboBox<String> roleComboBox = new ComboBox<>();
+            roleComboBox.getItems().addAll("Admin", "Driver", "Client");
+            roleComboBox.setValue(selectedUser.getRole());
+
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(nameField, 1, 0);
+            grid.add(new Label("Email:"), 0, 1);
+            grid.add(emailField, 1, 1);
+            grid.add(new Label("Phone:"), 0, 2);
+            grid.add(phoneField, 1, 2);
+            grid.add(new Label("Role:"), 0, 3);
+            grid.add(roleComboBox, 1, 3);
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == saveButtonType) {
+                    return new User(selectedUser.getId(), nameField.getText(), emailField.getText(),
+                            phoneField.getText(), roleComboBox.getValue(), selectedUser.getCreatedAt());
+                }
+                return null;
+            });
+
+            dialog.showAndWait().ifPresent(updatedUser -> {
+                updateUser(selectedUser, updatedUser);
+            });
+
         } else {
             showErrorAlert("Please select a user to edit.");
         }
+    }
+
+    private void updateUser(User oldUser, User updatedUser) {
+        new Thread(() -> {
+            try {
+                String requestBody = String.format(
+                        "{\"name\":\"%s\",\"email\":\"%s\",\"phone\":\"%s\",\"role\":\"%s\"}",
+                        updatedUser.getName(), updatedUser.getEmail(),
+                        updatedUser.getPhone(), updatedUser.getRole().toLowerCase()
+                );
+
+                String response = authService.makeApiCall("PUT", "/users/" + oldUser.getId(), requestBody);
+                JsonNode jsonResponse = objectMapper.readTree(response);
+
+                if (jsonResponse.get("success").asBoolean()) {
+                    javafx.application.Platform.runLater(() -> {
+                        showInfoAlert("Success", "User updated successfully!");
+                        loadUsersData(); // Refresh the user list
+                    });
+                } else {
+                    throw new Exception("API error: " + jsonResponse.get("message").asText());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    showErrorAlert("Failed to update user: " + e.getMessage());
+                });
+            }
+        }).start();
     }
 
     @FXML
@@ -229,8 +469,7 @@ public class UserManagementController {
 
             confirmation.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    System.out.println("Delete user: " + selectedUser.getName());
-                    showInfoAlert("User Deleted", "User " + selectedUser.getName() + " has been deleted successfully.\n\nNote: This is a demo. In production, this would remove the user from the database.");
+                    deleteUser(selectedUser);
                 }
             });
         } else {
@@ -238,11 +477,34 @@ public class UserManagementController {
         }
     }
 
+    private void deleteUser(User user) {
+        new Thread(() -> {
+            try {
+                String response = authService.makeApiCall("DELETE", "/users/" + user.getId());
+                JsonNode jsonResponse = objectMapper.readTree(response);
+
+                if (jsonResponse.get("success").asBoolean()) {
+                    javafx.application.Platform.runLater(() -> {
+                        showInfoAlert("Success", "User deleted successfully!");
+                        loadUsersData(); // Refresh the user list
+                    });
+                } else {
+                    throw new Exception("API error: " + jsonResponse.get("message").asText());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    showErrorAlert("Failed to delete user: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+
     @FXML
     private void handleRefresh() {
         System.out.println("Refreshing user data...");
         loadUsersData();
-        showInfoAlert("Refresh", "User data refreshed successfully!");
     }
 
     @FXML
