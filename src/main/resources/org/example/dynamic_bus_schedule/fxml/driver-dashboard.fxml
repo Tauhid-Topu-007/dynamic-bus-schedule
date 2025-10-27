@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="mainContainer" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.dynamic_bus_schedule.controller.DriverDashboardController">
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #3498db, #2980b9);">
+            <children>
+                <HBox alignment="CENTER_LEFT" style="-fx-padding: 15;">
+                    <children>
+                        <Label text="🚌 Driver Portal" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label fx:id="welcomeLabel" text="Welcome, Driver!" style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;" />
+                                <Label fx:id="userRoleLabel" text="Professional Driver" style="-fx-text-fill: #ecf0f1; -fx-font-size: 12;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- Navigation Menu -->
+                <HBox alignment="CENTER" spacing="30" style="-fx-padding: 10; -fx-background-color: rgba(0,0,0,0.1);">
+                    <children>
+                        <Button text="Dashboard" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: white; -fx-border-width: 0 0 2 0;" />
+                        <Button text="My Schedule" onAction="#handleViewSchedule" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button text="Report Issue" onAction="#handleReportIssue" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: white; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="30" style="-fx-padding: 40;">
+                    <children>
+                        <Label text="Driver Dashboard" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                        <!-- Driver Statistics Cards -->
+                        <HBox alignment="CENTER" spacing="20">
+                            <children>
+                                <!-- Assigned Bus Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 250;">
+                                    <children>
+                                        <Label text="🚌" style="-fx-font-size: 36;" />
+                                        <Label fx:id="assignedBusLabel" text="BUS-002" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #3498db; -fx-wrap-text: true; -fx-text-alignment: center;" />
+                                        <Label text="Assigned Bus" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Today's Trips Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 200;">
+                                    <children>
+                                        <Label text="📅" style="-fx-font-size: 36;" />
+                                        <Label fx:id="todaysTripsLabel" text="3" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+                                        <Label text="Today's Trips" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Next Trip Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 250;">
+                                    <children>
+                                        <Label text="🕒" style="-fx-font-size: 36;" />
+                                        <Label fx:id="nextTripLabel" text="Dhaka to Sylhet" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #27ae60; -fx-wrap-text: true; -fx-text-alignment: center;" />
+                                        <Label text="Next Trip" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- Quick Actions -->
+                        <VBox spacing="20" style="-fx-pref-width: 800;">
+                            <children>
+                                <Label text="Quick Actions" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                                <HBox alignment="CENTER" spacing="20">
+                                    <children>
+                                        <!-- Start Trip Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #27ae60; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 200;" onMouseClicked="#handleStartTrip">
+                                            <children>
+                                                <Label text="▶️" style="-fx-font-size: 48;" />
+                                                <Label text="Start Trip" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Begin your scheduled trip" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Start" onAction="#handleStartTrip" style="-fx-background-color: white; -fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Complete Trip Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 200;" onMouseClicked="#handleCompleteTrip">
+                                            <children>
+                                                <Label text="✅" style="-fx-font-size: 48;" />
+                                                <Label text="Complete Trip" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Mark trip as completed" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Complete" onAction="#handleCompleteTrip" style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Report Issue Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #e74c3c; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 200;" onMouseClicked="#handleReportIssue">
+                                            <children>
+                                                <Label text="🚨" style="-fx-font-size: 48;" />
+                                                <Label text="Report Issue" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Report bus or route issues" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Report" onAction="#handleReportIssue" style="-fx-background-color: white; -fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <!-- Today's Schedule Section -->
+                        <VBox spacing="15" style="-fx-pref-width: 800;">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <children>
+                                        <Label text="Today's Schedule" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button text="Refresh" onAction="#handleRefresh" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 80;" />
+                                    </children>
+                                </HBox>
+                                <TableView fx:id="todaysScheduleTable" style="-fx-pref-height: 250;">
+                                    <columns>
+                                        <TableColumn fx:id="routeColumn" text="Route" prefWidth="200" />
+                                        <TableColumn fx:id="departureColumn" text="Departure" prefWidth="150" />
+                                        <TableColumn fx:id="arrivalColumn" text="Arrival" prefWidth="150" />
+                                        <TableColumn fx:id="timeColumn" text="Time" prefWidth="150" />
+                                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <!-- Driver Information Section -->
+                        <VBox spacing="15" style="-fx-pref-width: 800;">
+                            <children>
+                                <Label text="Driver Information" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                                <GridPane hgap="20" vgap="15" style="-fx-padding: 20; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="200" />
+                                        <ColumnConstraints prefWidth="300" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label text="Driver ID:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                        <Label text="DRV-001" style="-fx-text-fill: #7f8c8d;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                                        <Label text="License Number:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                        <Label text="DL-123456789" style="-fx-text-fill: #7f8c8d;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                                        <Label text="Contact:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                        <Label text="+880-1712-XXXXXX" style="-fx-text-fill: #7f8c8d;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                                        <Label text="Emergency Contact:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                        <Label text="+880-XXXX-XXXXXX" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <!-- Empty space at the bottom for better scrolling -->
+                        <Region prefHeight="50" />
+                    </children>
+                </VBox>
+            </content>
+
+            <!-- ScrollPane padding -->
+            <padding>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </padding>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 15;">
+            <children>
+                <Label text="© 2024 Bus Schedule System - Driver Portal" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 35;" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
