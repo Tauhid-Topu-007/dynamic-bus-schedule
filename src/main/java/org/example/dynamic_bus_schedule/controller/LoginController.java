@@ -29,6 +29,7 @@ public class LoginController {
     // Containers
     @FXML private StackPane loginContainer;
     @FXML private StackPane registerContainer;
+    @FXML private ScrollPane mainScrollPane;
 
     private Main mainApp;
     private AuthService authService;
@@ -66,6 +67,9 @@ public class LoginController {
         // Setup enter key listeners
         setupEnterKeyListeners();
 
+        // Setup scroll pane
+        setupScrollPane();
+
         // Make sure login form is visible by default
         if (loginContainer != null && registerContainer != null) {
             loginContainer.setVisible(true);
@@ -87,6 +91,17 @@ public class LoginController {
         }
     }
 
+    private void setupScrollPane() {
+        if (mainScrollPane != null) {
+            // Configure scroll pane for better user experience
+            mainScrollPane.setFitToWidth(true);
+            mainScrollPane.setFitToHeight(true);
+            mainScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            mainScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            mainScrollPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
+        }
+    }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
         System.out.println("MainApp set in controller");
@@ -98,6 +113,7 @@ public class LoginController {
             loginContainer.setVisible(false);
             registerContainer.setVisible(true);
             clearErrors();
+            scrollToTop();
         }
     }
 
@@ -107,6 +123,13 @@ public class LoginController {
             registerContainer.setVisible(false);
             loginContainer.setVisible(true);
             clearErrors();
+            scrollToTop();
+        }
+    }
+
+    private void scrollToTop() {
+        if (mainScrollPane != null) {
+            mainScrollPane.setVvalue(0);
         }
     }
 
@@ -191,7 +214,10 @@ public class LoginController {
                         new Thread(() -> {
                             try {
                                 Thread.sleep(2000);
-                                javafx.application.Platform.runLater(this::showLoginForm);
+                                javafx.application.Platform.runLater(() -> {
+                                    showLoginForm();
+                                    scrollToTop();
+                                });
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -292,6 +318,7 @@ public class LoginController {
             loginErrorLabel.setText(message);
             loginErrorLabel.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
             loginErrorLabel.setVisible(true);
+            scrollToTop();
         }
     }
 
@@ -300,6 +327,7 @@ public class LoginController {
             loginErrorLabel.setText(message);
             loginErrorLabel.setStyle("-fx-text-fill: #388e3c; -fx-font-weight: bold;");
             loginErrorLabel.setVisible(true);
+            scrollToTop();
         }
     }
 
@@ -308,6 +336,7 @@ public class LoginController {
             registerErrorLabel.setText(message);
             registerErrorLabel.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
             registerErrorLabel.setVisible(true);
+            scrollToTop();
         }
     }
 
@@ -316,6 +345,7 @@ public class LoginController {
             registerErrorLabel.setText(message);
             registerErrorLabel.setStyle("-fx-text-fill: #388e3c; -fx-font-weight: bold;");
             registerErrorLabel.setVisible(true);
+            scrollToTop();
         }
     }
 
