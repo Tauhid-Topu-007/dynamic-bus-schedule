@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<StackPane fx:id="mainPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.dynamic_bus_schedule.controller.LoginController">
+    <children>
+        <HBox spacing="20" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2);">
+            <children>
+                <!-- Left Side - Welcome Section -->
+                <VBox alignment="CENTER" prefWidth="400" style="-fx-background-color: rgba(255,255,255,0.1);">
+                    <children>
+                        <Label text="Bus Schedule System" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                        </Label>
+                        <Label text="Manage your bus schedules efficiently" style="-fx-text-fill: white; -fx-font-size: 14; -fx-opacity: 0.8;" />
+                        <ImageView fitHeight="200" fitWidth="200" pickOnBounds="true" preserveRatio="true">
+                            <!-- Comment out image temporarily to avoid errors -->
+                            <!-- <image>
+                                <Image url="@../images/bus-icon.png" />
+                            </image> -->
+                        </ImageView>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </VBox>
+
+                <!-- Right Side - Login/Register Forms -->
+                <StackPane prefWidth="500">
+                    <children>
+                        <!-- Login Form -->
+                        <StackPane fx:id="loginContainer">
+                            <VBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 40;">
+                                <children>
+                                    <Label text="Welcome Back" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+                                    <Label text="Sign in to your account" style="-fx-text-fill: #666; -fx-font-size: 14;" />
+
+                                    <VBox spacing="10">
+                                        <Label text="Email" />
+                                        <TextField fx:id="loginEmail" promptText="Enter your email" />
+
+                                        <Label text="Password" />
+                                        <PasswordField fx:id="loginPassword" promptText="Enter your password" />
+                                    </VBox>
+
+                                    <Button fx:id="loginButton" text="Sign In" defaultButton="true" style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 200; -fx-pref-height: 40;" />
+
+                                    <HBox alignment="CENTER">
+                                        <Label text="Don't have an account?" />
+                                        <Hyperlink fx:id="showRegisterLink" text="Sign up" />
+                                    </HBox>
+
+                                    <!-- Changed to unique ID -->
+                                    <Label fx:id="loginErrorLabel" style="-fx-text-fill: red; -fx-wrap-text: true; -fx-max-width: 300;" visible="false" />
+                                </children>
+                            </VBox>
+                        </StackPane>
+
+                        <!-- Register Form -->
+                        <StackPane fx:id="registerContainer" visible="false">
+                            <VBox alignment="CENTER" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30;">
+                                <children>
+                                    <Label text="Create Account" style="-fx-font-size: 24; -fx-font-weight: bold;" />
+                                    <Label text="Join us today" style="-fx-text-fill: #666; -fx-font-size: 14;" />
+
+                                    <VBox spacing="8">
+                                        <Label text="Full Name" />
+                                        <TextField fx:id="registerName" promptText="Enter your full name" />
+
+                                        <Label text="Email" />
+                                        <TextField fx:id="registerEmail" promptText="Enter your email" />
+
+                                        <Label text="Password" />
+                                        <PasswordField fx:id="registerPassword" promptText="Enter your password" />
+
+                                        <Label text="Phone" />
+                                        <TextField fx:id="registerPhone" promptText="Enter your phone number" />
+
+                                        <Label text="Role" />
+                                        <ComboBox fx:id="registerRole" prefWidth="200" />
+                                    </VBox>
+
+                                    <Button fx:id="registerButton" text="Create Account" defaultButton="true" style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 200; -fx-pref-height: 40;" />
+
+                                    <HBox alignment="CENTER">
+                                        <Label text="Already have an account?" />
+                                        <Hyperlink fx:id="showLoginLink" text="Sign in" />
+                                    </HBox>
+
+                                    <!-- Changed to unique ID -->
+                                    <Label fx:id="registerErrorLabel" style="-fx-text-fill: red; -fx-wrap-text: true; -fx-max-width: 300;" visible="false" />
+                                </children>
+                            </VBox>
+                        </StackPane>
+                    </children>
+                </StackPane>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </HBox>
+    </children>
+</StackPane>

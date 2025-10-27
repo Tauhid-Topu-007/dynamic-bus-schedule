@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="mainContainer" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.dynamic_bus_schedule.controller.AdminDashboardController">
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2);">
+            <children>
+                <HBox alignment="CENTER_LEFT" style="-fx-padding: 15;">
+                    <children>
+                        <Label text="🚌 Bus Schedule System" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label fx:id="welcomeLabel" text="Welcome, Admin" style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;" />
+                                <Label fx:id="userRoleLabel" text="Administrator" style="-fx-text-fill: #ecf0f1; -fx-font-size: 12;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- Navigation Menu -->
+                <HBox alignment="CENTER" spacing="30" style="-fx-padding: 10; -fx-background-color: rgba(0,0,0,0.1);">
+                    <children>
+                        <Button text="Dashboard" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: white; -fx-border-width: 0 0 2 0;" />
+                        <Button text="Bus Management" onAction="#handleBusManagement" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button text="Schedule Management" onAction="#handleScheduleManagement" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button text="User Management" onAction="#handleUserManagement" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button text="Reports" onAction="#handleReports" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: white; -fx-border-color: transparent;" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="30" style="-fx-padding: 40;">
+                    <children>
+                        <Label text="Admin Dashboard" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                        <!-- Statistics Cards -->
+                        <HBox alignment="CENTER" spacing="20">
+                            <children>
+                                <!-- Total Buses Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 200;">
+                                    <children>
+                                        <Label text="🚌" style="-fx-font-size: 36;" />
+                                        <Label fx:id="totalBusesLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #3498db;" />
+                                        <Label text="Total Buses" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Active Schedules Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 200;">
+                                    <children>
+                                        <Label text="📅" style="-fx-font-size: 36;" />
+                                        <Label fx:id="activeSchedulesLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+                                        <Label text="Active Schedules" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+
+                                <!-- Today's Trips Card -->
+                                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-pref-width: 200;">
+                                    <children>
+                                        <Label text="🕒" style="-fx-font-size: 36;" />
+                                        <Label fx:id="todaysTripsLabel" text="0" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #27ae60;" />
+                                        <Label text="Today's Trips" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <!-- Quick Actions -->
+                        <VBox spacing="20" style="-fx-pref-width: 800;">
+                            <children>
+                                <Label text="Quick Actions" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                                <HBox alignment="CENTER" spacing="20">
+                                    <children>
+                                        <!-- Bus Management Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #3498db; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 250;" onMouseClicked="#handleBusManagement">
+                                            <children>
+                                                <Label text="🚌" style="-fx-font-size: 48;" />
+                                                <Label text="Bus Management" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Manage bus fleet and details" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Manage" onAction="#handleBusManagement" style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Schedule Management Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #e74c3c; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 250;" onMouseClicked="#handleScheduleManagement">
+                                            <children>
+                                                <Label text="📅" style="-fx-font-size: 48;" />
+                                                <Label text="Schedule Management" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Create and manage bus schedules" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Manage" onAction="#handleScheduleManagement" style="-fx-background-color: white; -fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+
+                                        <!-- User Management Card -->
+                                        <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #27ae60; -fx-background-radius: 15; -fx-padding: 30; -fx-cursor: hand; -fx-pref-width: 250;" onMouseClicked="#handleUserManagement">
+                                            <children>
+                                                <Label text="👥" style="-fx-font-size: 48;" />
+                                                <Label text="User Management" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                                                <Label text="Manage users and permissions" style="-fx-text-fill: white; -fx-font-size: 12; -fx-text-alignment: center; -fx-wrap-text: true;" />
+                                                <Button text="Manage" onAction="#handleUserManagement" style="-fx-background-color: white; -fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-pref-width: 100;" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <!-- Recent Activity Section -->
+                        <VBox spacing="15" style="-fx-pref-width: 800;">
+                            <children>
+                                <Label text="Recent Activity" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                                <TableView fx:id="recentActivityTable" style="-fx-pref-height: 200;">
+                                    <columns>
+                                        <TableColumn fx:id="timeColumn" text="Time" prefWidth="150" />
+                                        <TableColumn fx:id="activityColumn" text="Activity" prefWidth="300" />
+                                        <TableColumn fx:id="userColumn" text="User" prefWidth="150" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <!-- System Information Section -->
+                        <VBox spacing="15" style="-fx-pref-width: 800;">
+                            <children>
+                                <Label text="System Information" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                                <GridPane hgap="20" vgap="15" style="-fx-padding: 20; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="200" />
+                                        <ColumnConstraints prefWidth="300" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label text="System Status:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                        <Label fx:id="systemStatusLabel" text="🟢 Operational" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                                        <Label text="Database:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                        <Label fx:id="databaseStatusLabel" text="🟢 Connected" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                                        <Label text="Last Backup:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                        <Label fx:id="lastBackupLabel" text="Today, 02:00 AM" style="-fx-text-fill: #7f8c8d;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                                        <Label text="Active Users:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                        <Label fx:id="activeUsersLabel" text="1" style="-fx-text-fill: #3498db; -fx-font-weight: bold;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <!-- Empty space at the bottom for better scrolling -->
+                        <Region prefHeight="50" />
+                    </children>
+                </VBox>
+            </content>
+
+            <!-- ScrollPane padding -->
+            <padding>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </padding>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 15;">
+            <children>
+                <Label text="© 2024 Bus Schedule System. All rights reserved." style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100; -fx-pref-height: 35;" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

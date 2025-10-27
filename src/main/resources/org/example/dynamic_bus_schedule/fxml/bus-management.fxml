@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.dynamic_bus_schedule.controller.BusManagementController">
+    <top>
+        <VBox>
+            <children>
+                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #34495e; -fx-padding: 15;">
+                    <children>
+                        <Button text="← Back" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Bus Management" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" />
+                    </children>
+                </HBox>
+
+                <!-- Search and Filter Section -->
+                <HBox spacing="15" style="-fx-padding: 15;">
+                    <children>
+                        <TextField fx:id="searchField" promptText="Search buses..." prefWidth="200" />
+                        <ComboBox fx:id="statusFilter" prefWidth="150" />
+                        <Region HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.6">
+            <items>
+                <!-- Bus Table -->
+                <VBox spacing="10">
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <children>
+                        <Label text="Buses" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+                        <TableView fx:id="busTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="busNumberColumn" text="Bus Number" prefWidth="100" />
+                                <TableColumn fx:id="licensePlateColumn" text="License Plate" prefWidth="120" />
+                                <TableColumn fx:id="modelColumn" text="Model" prefWidth="150" />
+                                <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80" />
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <!-- Bus Form -->
+                <VBox spacing="15" style="-fx-padding: 15;">
+                    <children>
+                        <Label text="Bus Details" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+
+                        <GridPane hgap="10" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="Bus Number *" />
+                                <TextField fx:id="busNumberField" GridPane.columnIndex="1" />
+
+                                <Label text="License Plate *" GridPane.rowIndex="1" />
+                                <TextField fx:id="licensePlateField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                <Label text="Model *" GridPane.rowIndex="2" />
+                                <TextField fx:id="modelField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                <Label text="Capacity *" GridPane.rowIndex="3" />
+                                <TextField fx:id="capacityField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                <Label text="Fuel Type" GridPane.rowIndex="4" />
+                                <ComboBox fx:id="fuelTypeField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                <Label text="Year" GridPane.rowIndex="5" />
+                                <TextField fx:id="yearField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                            </children>
+                        </GridPane>
+
+                        <Label text="Amenities (comma separated)" />
+                        <TextField fx:id="amenitiesField" promptText="wifi, ac, charging_ports" />
+
+                        <HBox spacing="10">
+                            <children>
+                                <Button fx:id="addButton" text="Add Bus" onAction="#handleAddBus" style="-fx-background-color: #27ae60; -fx-text-fill: white;" />
+                                <Button fx:id="updateButton" text="Update Bus" onAction="#handleUpdateBus" disable="true" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                                <Button fx:id="deleteButton" text="Delete Bus" onAction="#handleDeleteBus" disable="true" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+                                <Button fx:id="clearButton" text="Clear" onAction="#handleClearForm" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>
